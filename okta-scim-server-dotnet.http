@@ -1,0 +1,6 @@
+@okta_scim_server_dotnet_HostAddress = http://localhost:5156
+
+GET {{okta_scim_server_dotnet_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
