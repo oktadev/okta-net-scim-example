@@ -1,7 +1,7 @@
 # Integrate with Okta Using SCIM and dotnet
 
 ## What is SCIM?
-SCIM, the System for Cross-domain Identity Management is an open standard protocol that allows us to manage identities across systems as well as common user lifecycles. This is a HTTP-based protocal which defines a set of standard endpoints and schemas which can be used to overcome complexity in implemnting user management operations across different systems.
+SCIM, the System for Cross-domain Identity Management is an open standard protocol that allows us to manage identities across systems as well as common user lifecycles. This is a HTTP-based protocal which defines a set of standard endpoints and schemas which can be used to overcome complexity in implementing user management operations across different systems.
 
 ## Components of SCIM
 There are two major components for a SCIM integration,
@@ -19,21 +19,24 @@ There are two major components for a SCIM integration,
 - Create a new folder named *okta-scim-server-dotnet*
 - Open terminal and make this as current folder using `cd okta-scim-server-dotnet` command
 - Create new API project using `dotnet new webapi`
-- Add dotnet *.gitignore* file using standard options
+- Add dotnet *.gitignore* file using standard options (You can use [this](https://github.com/ramgandhi-okta/okta-scim-server-dotnet/blob/main/.gitignore))
 - Trust self signed TLS certs using `dotnet dev-certs https --trust`
 
 ### Test Project Setup
 - Run project using `dotnet watch --launch-profile https`
-- At this point using the *https://localhost:<port>/swagger/index.html* you will be able to see swagger UI (Typically a browser tab opens automatically, if not check url in Properties/launchSettings.json)
+- At this point using the *https://localhost:[port]/swagger/index.html* you will be able to see swagger UI (Typically a browser tab opens automatically, if not check url in Properties/launchSettings.json)
 
 ## Create Data Modles
-- Add required dependencies for ORM
+- Add required dependencies for ORM by running following commands
     - `dotnet tool install --global dotnet-ef`
     - `dotnet add package Microsoft.EntityFrameworkCore.Tools`
     - `dotnet add package Microsoft.EntityFrameworkCore.Design`
     - `dotnet add package Microsoft.EntityFrameworkCore.Sqlite`
 - Create `DataModels.cs` file and add required Model classes
     ```c#
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Microsoft.EntityFrameworkCore;
+
     namespace okta_scim_server_dotnet;
 
     public partial class User
@@ -63,13 +66,7 @@ There are two major components for a SCIM integration,
         public virtual User User { get; set; }
     }
     ```
-- Add DB context for entity framework in `DataModels.cs` with some seed data
-    - At the top add `using` statements
-    ```c#
-    using System.ComponentModel.DataAnnotations.Schema;
-    using Microsoft.EntityFrameworkCore;
-    ```
-    - At the bottom add the following code
+- Add DB context for entity framework in `DataModels.cs` with some seed data at the bottom add the following code
     ```c#
     public partial class ScimDbContext : DbContext
     {
@@ -114,8 +111,8 @@ There are two major components for a SCIM integration,
             options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
         );
         ```
-- Add migration of this initial database using `dotnet ef migrations add InitialScimDb`
-- Apply these changes to db using `dotnet ef database update`
+- Add migration of this initial database by running `dotnet ef migrations add InitialScimDb`
+- Apply these changes to db by running `dotnet ef database update`
 - *Optional:* Test db creation using command line tool, 
     - You should have sqllite3 client installed. (I had this OOB in mac OS)
     - Connect using`sqlite3 <<Path to sqlite file>>/scim-dev.db`
@@ -204,7 +201,7 @@ There are two major components for a SCIM integration,
     - Install dependencies by running following commands
         - `dotnet add package AutoMapper`
         - `dotnet add package Automapper.Extensions.Microsoft.DependencyInjection`
-    - Add Mappings to `ScimModles.cs` 
+    - Add Mappings to `ScimModels.cs` 
         - At the top add the `using` statement
             ```c#
             using AutoMapper;
@@ -243,6 +240,8 @@ There are two major components for a SCIM integration,
     ```c#
     using System.Text.Json.Serialization;
     using System.Text.Json;
+    using System.Net;
+    using Microsoft.AspNetCore.Mvc;
     ```
 - Add the following code after `var builder = WebApplication.CreateBuilder(args);` to respond cleanly and overcome parsing limiations
     ```c#
@@ -251,6 +250,7 @@ There are two major components for a SCIM integration,
         options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
     ```
+- *Optional* - Remove WeatherForecast related sample code
 - Add following code before `app.run()` for List Users, Get User, Create User, Update User, Deactivate User (Okta does not send HTTP Delete calls) endpoints
     ```c#
     var scimPrefix = "/scim/v2";
@@ -332,10 +332,10 @@ There are two major components for a SCIM integration,
     .WithName("UpdateUserPartial")
     .WithOpenApi();
     ```
-- This can be tested at this point using steps mentioned in an [earlier secion](###test-project-setup).
+- This can be tested at this point using steps mentioned in an [earlier secion](#test-project-setup).
 
 
-### Add Authentication
+### Secure your endpoints
 - Install dependency by running `dotnet add package Okta.AspNetCore`
 - Add okta configuration in `appsettings.json` file as a top level property
     ```json
@@ -386,7 +386,7 @@ There are two major components for a SCIM integration,
     - Create an application in Okta
         - In Okta admin console, navigate to *Applications > Applications > Create App Integration*
         - Select *OIDC - OpenID Connect* > *Single-Page Application*
-        - Fill a name, add *https://localhost:<<test-port>>/swagger/oauth2-redirect.html* to *Sign-in redirect URIs* (test port is the port your dev server is running on)
+        - Fill a name, add *https://localhost:[test-port]/swagger/oauth2-redirect.html* to *Sign-in redirect URIs* (test port is the port your dev server is running on)
         - Assign to appropriate users. For simplicity, I selected *Allow everyone in your organization to access* as *Assignments*
         - Click *Save* button
         - Note down *Client ID* from the resulting screen
@@ -398,7 +398,8 @@ There are two major components for a SCIM integration,
             "SwaggerClientId": "<<Swagger client app client ID>>"
         }
         ```
-    - In `Program.cs`, Update `builder.Services.AddSwaggerGen();` to
+    - In `Program.cs`, add `using Microsoft.OpenApi.Models;` at the top
+    - Update `builder.Services.AddSwaggerGen();` to
         ```c#
         builder.Services.AddSwaggerGen(c =>
         {
@@ -436,7 +437,7 @@ There are two major components for a SCIM integration,
             c.OAuthUsePkce();
         });
         ```
-- At this point, this can be tested at this point using steps mentioned in an [earlier secion](###test-project-setup)
+- At this point, this can be tested at this point using steps mentioned in an [earlier secion](#test-project-setup)
 - If you have implemented Swashbuckle oAuth bootstrap, you should be able to use UI to test endpoints. If not, generate oauth token from Okta in a different way and use `curl` or postman to test
 
 ### Integrate with Okta
@@ -452,7 +453,7 @@ There are two major components for a SCIM integration,
     - Select *SCIM 2.0 Test App (OAuth Bearer Token)* > *Add Integration*
     - Fill *Application label*, click *Next* and click *Done*
     - Navigate to *Provisioning* tab and click *Configure API Integration* > *Enable API integration*
-        - *SCIM 2.0 Base Url:* https://<<scim server domain>>/scim/v2
+        - *SCIM 2.0 Base Url:* https://[scim server domain]/scim/v2
         - *OAuth Bearer Token:* Bearer Token (Can be retrieved from the test you did above either from UI or curl)
         - *Import Groups:* Uncheck as we are not implementing this
     - In application page, under *Provisioning > To App* click *Edit*
