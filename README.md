@@ -12,6 +12,18 @@ This project is intended to demonstate integrating Okta and a sample SCIM server
 - If you have git client, run `git clone https://github.com/ramgandhi-okta/okta-scim-server-dotnet.git` to download the code
 - If not, you can download the repo
 
+## Update Configuration
+
+- Update `Okta` section in `appsettings.json` file
+- `SwaggerClientId` is optional and is needed only when you want to use UI to test endpoints
+    - Create an application in Okta
+        - In Okta admin console, navigate to *Applications > Applications > Create App Integration*
+        - Select *OIDC - OpenID Connect* > *Single-Page Application*
+        - Fill a name, add *https://localhost:7094/swagger/oauth2-redirect.html* to *Sign-in redirect URIs* (test port is the port your dev server is running on)
+        - Assign to appropriate users. For simplicity, I selected *Allow everyone in your organization to access* as *Assignments*
+        - Click *Save* button
+        - Note down *Client ID* from the resulting screen
+
 ## Prepare Database
 - Install ef tools by running `dotnet tool install --global dotnet-ef`
 - Add migration of this initial database by running `dotnet ef migrations add InitialScimDb`
@@ -22,27 +34,15 @@ This project is intended to demonstate integrating Okta and a sample SCIM server
     - List tables using `.tables`
     - Then exit using `.exit`
 
-## Update Configuration
-
-- Update `Okta` section in `appsettings.json` file
-- `SwaggerClientId` is optional and is needed only when you want to use UI to test endpoints
-    - Create an application in Okta
-        - In Okta admin console, navigate to *Applications > Applications > Create App Integration*
-        - Select *OIDC - OpenID Connect* > *Single-Page Application*
-        - Fill a name, add *https://localhost:[test-port]/swagger/oauth2-redirect.html* to *Sign-in redirect URIs* (test port is the port your dev server is running on)
-        - Assign to appropriate users. For simplicity, I selected *Allow everyone in your organization to access* as *Assignments*
-        - Click *Save* button
-        - Note down *Client ID* from the resulting screen
-
 ## Test Project Setup
 - Run project using `dotnet watch --launch-profile https`
-- At this point using the *https://localhost:[port]/swagger/index.html* you will be able to see swagger UI (Typically a browser tab opens automatically, if not check url in Properties/launchSettings.json)
+- At this point using *https://localhost:7094/swagger/index.html* you will be able to see swagger UI (Typically a browser tab opens automatically)
 
 ## Integrate with Okta
 - Expose your SCIM server to the internet
     - Run project using `dotnet watch --launch-profile http`
     - I have used [ngrok](https://ngrok.com/). Feel free to use any other tunneling tool like [localtunnel](https://github.com/localtunnel/localtunnel) or deploy to a public facing domain to test this
-    - Tunnel using `ngrok http <<port>>` (you can get this port from *Properties/launchSettings.json*)
+    - Tunnel using `ngrok http 5156`
     - Note down the domain listed in the console (this will be referred as *scim server domain*)
     - open http://localhost:4040/ to inspect traffic
 - Create a provisioning app in Okta
