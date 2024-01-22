@@ -99,6 +99,7 @@ public partial class ScimDbContext : DbContext
         modelBuilder.Entity<Email>().HasData(new List<Email> {
             new Email { Type = "work", Value="mdaldo@fake.domain", Primary = true, UserId = 1 },
             new Email { Type = "personal", Value="mdaldo@personal.domain", Primary = false, UserId = 1 },
+            new Email { Type = "work", Value="dslem@fake.domain", Primary = true, UserId = 2 },
             new Email { Type = "work", Value="smahesh@fake.domain", Primary = true, UserId = 3 }
         });
         base.OnModelCreating(modelBuilder);
@@ -255,7 +256,7 @@ We also need to create mappers between DB models and SCIM models to avoid lot of
 ### Create SCIM Endpoints
 Since we have created the necessary data and scim models. We can move on to creating the endpoints for User lifecycle management. First lets setup dependencies, some basic global configuration and cleanup unnecessary code
 - Install dependencies by running `dotnet add package Newtonsoft.Json`
-- At the top add `using` statements
+- At the top of `program.cs` file, add `using` statements
     ```c#
     using System.Text.Json.Serialization;
     using System.Text.Json;

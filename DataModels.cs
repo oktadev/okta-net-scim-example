@@ -22,6 +22,7 @@ public partial class ScimDbContext : DbContext
         modelBuilder.Entity<Email>().HasData(new List<Email> {
             new Email { Type = "work", Value="mdaldo@fake.domain", Primary = true, UserId = 1 },
             new Email { Type = "personal", Value="mdaldo@personal.domain", Primary = false, UserId = 1 },
+            new Email { Type = "work", Value="dslem@fake.domain", Primary = true, UserId = 2 },
             new Email { Type = "work", Value="smahesh@fake.domain", Primary = true, UserId = 3 }
         });
         base.OnModelCreating(modelBuilder);
