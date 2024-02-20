@@ -1,8 +1,8 @@
 # How to Manage User Lifecycle with .NET and SCIM
 
-This repo is a .NET server that implements RESTful APIs to manage user lifecycle as written in the SCIM (System for Cross-domain Management)[https://datatracker.ietf.org/doc/html/rfc7644]. 
+This repo is a .NET server that implements RESTful APIs to manage user lifecycle as written in the SCIM [System for Cross-domain Management](https://datatracker.ietf.org/doc/html/rfc7644). 
 
-Please read [How to Add Authentication to .NET MAUI Apps][blog] to see how it was created and how to integrate with an SCIM compliant Identity Provider such as Okta. 
+Please read [How to Add Authentication to .NET MAUI Apps][blog] to see how it was created and how to integrate with a SCIM-compliant Identity Provider such as Okta. 
 
 **Prerequisites:**
 
