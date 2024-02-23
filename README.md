@@ -24,7 +24,7 @@ Please read [How to Add Authentication to .NET MAUI Apps][blog] to see how it wa
 Clone or download the sample. You can download the files as a zip file. To clone the repo follow the instructions below:
 
 ```bash
-git clone https://github.com/oktadev/okta-net-maui-example.git
+git clone https://github.com/oktadev/okta-net-scim-example.git
 cd okta-net-maui-example
 ```
 
