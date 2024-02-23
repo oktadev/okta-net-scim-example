@@ -61,9 +61,54 @@ Client ID: {yourClientID}
 
 Replace all instances of {yourOktaDomain} and {yourClientID} in the project.
 
-## Run the app
+## Update Configuration
 
-In Visual Studio Code run ...
+- Update `Okta` section in `appsettings.json` file
+- `SwaggerClientId` is optional and is needed only when you want to use UI to test endpoints
+    - Create an application in Okta
+        - In Okta admin console, navigate to *Applications > Applications > Create App Integration*
+        - Select *OIDC - OpenID Connect* > *Single-Page Application*
+        - Fill a name, add *https://localhost:7094/swagger/oauth2-redirect.html* to *Sign-in redirect URIs* (test port is the port your dev server is running on)
+        - Assign to appropriate users. For simplicity, I selected *Allow everyone in your organization to access* as *Assignments*
+        - Click *Save* button
+        - Note down *Client ID* from the resulting screen
+
+## Prepare Database
+- Install ef tools by running `dotnet tool install --global dotnet-ef`
+- Add migration of this initial database by running `dotnet ef migrations add InitialScimDb`
+- Apply these changes to db by running `dotnet ef database update`
+- *Optional:* Test db creation using command line tool, 
+    - You should have [sqlite3](https://www.sqlite.org/) client installed. (I had this out of the box in mac OS)
+    - Connect using`sqlite3 <<Path to sqlite file>>/scim-dev.db`
+    - List tables using `.tables`
+    - Then exit using `.exit`
+
+## Test Project Setup
+- Run project using `dotnet watch --launch-profile https`
+- At this point using *https://localhost:7094/swagger/index.html* you will be able to see swagger UI (Typically, a browser tab opens automatically)
+
+## Integrate with Okta
+- Expose your SCIM server to the internet
+    - Run project using `dotnet watch --launch-profile http`
+    - I have used [ngrok](https://ngrok.com/). Feel free to use any other tunneling tool like [localtunnel](https://github.com/localtunnel/localtunnel) or deploy to a public facing domain to test this
+    - Tunnel using `ngrok http 5156`
+    - Note down the domain listed in the console (this will be referred as *scim server domain*)
+    - open http://localhost:4040/ to inspect traffic
+- Create a provisioning app in Okta
+    - In Okta admin console, navigate to *Applications > Applications > Browse App Catalog*
+    - Search for *SCIM 2.0 Test App*
+    - Select *SCIM 2.0 Test App (OAuth Bearer Token)* > *Add Integration*
+    - Fill *Application label*, click *Next* and click *Done*
+    - Navigate to *Provisioning* tab and click *Configure API Integration* > *Enable API integration*
+        - *SCIM 2.0 Base Url:* https://[scim server domain]/scim/v2
+        - *OAuth Bearer Token:* Bearer Token (Can be retrieved from the test you did above either from UI or curl)
+        - *Import Groups:* Uncheck as we are not implementing this
+    - In application page, under *Provisioning > To App* click *Edit*
+    - Check *Create Users*, *Update User Attributes*, *Deactivate Users* and click *Save*
+    - In *Assignments* tab, assign to test users.
+    - *Voila!* You should be able to see requests coming to your SCIM server from Okta
+    - Inspect traffic to see contents of request/response
+    - Now you can add more users, update users or remove users and explore more SCIM interactions
 
 ## Help
 
