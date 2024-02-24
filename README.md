@@ -6,7 +6,6 @@ Please read [How to Add Authentication to .NET MAUI Apps][blog] to see how it wa
 
 **Prerequisites:**
 
-* MacOS Sonoma 14.3 (23D56)
 * [Visual Studio Code Version: 1.85.2](https://code.visualstudio.com/)
 * [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 * [Okta CLI](https://cli.okta.com)
