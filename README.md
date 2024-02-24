@@ -24,7 +24,7 @@ Clone or download the sample. You can download the files as a zip file. To clone
 
 ```bash
 git clone https://github.com/oktadev/okta-net-scim-example.git
-cd okta-net-maui-example
+cd okta-net-scim-example
 ```
 
 Open the project in Visual Studio Code.
