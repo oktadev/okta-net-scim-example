@@ -45,10 +45,10 @@ okta apps create
 ```
 
 You will be prompted to select the following options:
-- Application name: 
-- Type of Application: 
-- Callback: `myapp://callback`
-- Post Logout Redirect URI: `myapp://callback`
+- Application name: okta-scim-sample-app
+- Type of Application: **2: Single Page App**
+- Callback: `https://localhost:7094/swagger/oauth2-redirect.html`
+- Post Logout Redirect URI: `https://localhost:7094`
 
 The application configuration will be printed in the terminal. You will see output like the following when it's finished:
 
@@ -64,13 +64,6 @@ Replace all instances of {yourOktaDomain} and {yourClientID} in the project.
 
 - Update `Okta` section in `appsettings.json` file
 - `SwaggerClientId` is optional and is needed only when you want to use UI to test endpoints
-    - Create an application in Okta
-        - In Okta admin console, navigate to *Applications > Applications > Create App Integration*
-        - Select *OIDC - OpenID Connect* > *Single-Page Application*
-        - Fill a name, add *https://localhost:7094/swagger/oauth2-redirect.html* to *Sign-in redirect URIs* (test port is the port your dev server is running on)
-        - Assign to appropriate users. For simplicity, I selected *Allow everyone in your organization to access* as *Assignments*
-        - Click *Save* button
-        - Note down *Client ID* from the resulting screen
 
 ## Prepare Database
 - Install ef tools by running `dotnet tool install --global dotnet-ef`
