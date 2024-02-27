@@ -62,8 +62,17 @@ Replace all instances of {yourOktaDomain} and {yourClientID} in the project.
 
 ## Update Configuration
 
-- Update `Okta` section in `appsettings.json` file
-- `SwaggerClientId` is optional and is needed only when you want to use UI to test endpoints
+- Update `Okta` section in `Properties/appsettings.json` file with the Okta domain and Issuer you obtained from the previous step. If you use the default template authorization server as mentioned [here](https://developer.okta.com/docs/concepts/auth-servers/#default-custom-authorization-server), then the `AuthorizationServerId` should be set to "default." See below for example:
+
+```json
+  "Okta": {
+      "OktaDomain": "https://${yourOktaDomain}.com",
+      "AuthorizationServerId": "default",
+      "SwaggerClientId": "${clientId}"
+  }
+```
+
+Note: `SwaggerClientId` is optional and is needed only when you want to use UI to test endpoints
 
 ## Prepare Database
 - Install ef tools by running `dotnet tool install --global dotnet-ef`
