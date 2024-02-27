@@ -62,7 +62,7 @@ Replace all instances of {yourOktaDomain} and {yourClientID} in the project.
 
 ## Update Configuration
 
-- Update `Okta` section in the `Properties/appsettings.json` file with the Okta domain and Issuer you obtained from the previous step. If you use the template authorization server called default as mentioned [here](https://developer.okta.com/docs/concepts/auth-servers/#default-custom-authorization-server), then set the `AuthorizationServerId` to the value "default." See the following setup for example:
+- Update `Okta` section in the `Properties/appsettings.json` file with the Okta domain and Issuer you obtained from the previous step. If you use the template authorization server called **default** as mentioned [here](https://developer.okta.com/docs/concepts/auth-servers/#default-custom-authorization-server), then set the `AuthorizationServerId` to the value "default." See the following setup for example:
 
 ```json
   "Okta": {
