@@ -113,7 +113,7 @@ Note: `SwaggerClientId` is optional and is needed only when you want to use UI t
 
 ## Help
 
-Please post any questions as comments on the [blog post][blog], or visit our [Okta Developer Forums](https://devforum.okta.com/).
+Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2024/02/29/net-scim), or visit our [Okta Developer Forums](https://devforum.okta.com/).
 
 ## License
 
